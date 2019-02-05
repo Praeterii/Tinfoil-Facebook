@@ -24,35 +24,31 @@ android {
     }
 
     buildTypes {
-        buildTypes {
-            all {
-                applicationIdSuffix '.praeterii.fork'
-                proguardFiles getDefaultProguardFile('proguard-android.txt'), "proguard.cfg"
-            }
-            debug {
-                minifyEnabled false
-                debuggable true
-            }
-
-            release {
-                minifyEnabled true
-                debuggable false
-            }
-
+        all {
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), "proguard.cfg"
         }
 
-        lintOptions {
-            disable 'ExtraTranslation'
-            disable 'MissingTranslation'
-            abortOnError false
+        debug {
+            minifyEnabled false
+            debuggable true
         }
 
+        release {
+            minifyEnabled true
+            debuggable false
+        }
     }
 
-    final SUPPORT_LIBRARY_VERSION = rootProject.ext.SUPPORT_LIBRARY_VERSION
-
-    dependencies {
-        compile "com.android.support:support-v4:${SUPPORT_LIBRARY_VERSION}"
-        compile 'com.squareup.picasso:picasso:2.5.2'
+    lintOptions {
+        disable 'ExtraTranslation'
+        disable 'MissingTranslation'
+        abortOnError false
     }
+}
+
+final SUPPORT_LIBRARY_VERSION = rootProject.ext.SUPPORT_LIBRARY_VERSION
+
+dependencies {
+    compile "com.android.support:support-v4:${SUPPORT_LIBRARY_VERSION}"
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
