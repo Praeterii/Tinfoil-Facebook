@@ -42,7 +42,7 @@
                 android:layout_width="@dimen/navigation_drawer_app_icon_size"
                 android:layout_height="@dimen/navigation_drawer_app_icon_size"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_launcher"
+                android:src="@mipmap/ic_launcher"
                 android:contentDescription="@string/app_name" />
 
             <TextView
