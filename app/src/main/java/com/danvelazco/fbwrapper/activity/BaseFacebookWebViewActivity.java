@@ -19,6 +19,7 @@ package com.danvelazco.fbwrapper.activity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -52,7 +53,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.danvelazco.fbwrapper.R;
 import com.danvelazco.fbwrapper.util.Logger;
-import com.danvelazco.fbwrapper.util.OrbotHelper;
 import com.danvelazco.fbwrapper.util.WebViewProxyUtil;
 import com.danvelazco.fbwrapper.webview.FacebookWebChromeClient;
 import com.danvelazco.fbwrapper.webview.FacebookWebView;
@@ -222,7 +222,6 @@ public abstract class BaseFacebookWebViewActivity extends Activity implements
      */
     @Override
     public void onPause() {
-
         // Un-register the connectivity changed receiver
         unregisterReceiver(mConnectivityReceiver);
 
@@ -471,7 +470,7 @@ public abstract class BaseFacebookWebViewActivity extends Activity implements
         if (mWebView != null) {
             mWebView.removeAllViews();
 
-            /** Free memory and destroy WebView */
+            /* Free memory and destroy WebView */
             mWebView.freeMemory();
             mWebView.destroy();
             mWebView = null;
@@ -518,9 +517,6 @@ public abstract class BaseFacebookWebViewActivity extends Activity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         switch (requestCode) {
-            case OrbotHelper.REQUEST_CODE_START_ORBOT:
-                mWebView.reload();
-                break;
             case RESULT_CODE_FILE_UPLOAD:
                 if (null == mUploadMessage) {
                     return;
@@ -698,7 +694,7 @@ public abstract class BaseFacebookWebViewActivity extends Activity implements
     private Target saveImageTarget = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
-            (new SaveImageTask()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
+            new SaveImageTask(getApplication()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
         }
 
         @Override
@@ -713,7 +709,12 @@ public abstract class BaseFacebookWebViewActivity extends Activity implements
         }
     };
 
-    private class SaveImageTask extends AsyncTask<Bitmap, Void, Boolean> {
+    private static class SaveImageTask extends AsyncTask<Bitmap, Void, Boolean> {
+        private final Application application;
+
+        SaveImageTask(Application application) {
+            this.application = application;
+        }
 
         @Override
         protected Boolean doInBackground(Bitmap... images) {
@@ -727,7 +728,7 @@ public abstract class BaseFacebookWebViewActivity extends Activity implements
                     ostream.close();
 
                     // Ping the media scanner
-                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(imageFile)));
+                    application.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(imageFile)));
 
                     return true;
                 }
@@ -740,11 +741,9 @@ public abstract class BaseFacebookWebViewActivity extends Activity implements
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                Toast.makeText(BaseFacebookWebViewActivity.this, getString(R.string.txt_save_image_success),
-                        Toast.LENGTH_LONG).show();
+                Toast.makeText(application, R.string.txt_save_image_success, Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(BaseFacebookWebViewActivity.this, getString(R.string.txt_save_image_failed),
-                        Toast.LENGTH_LONG).show();
+                Toast.makeText(application, R.string.txt_save_image_failed, Toast.LENGTH_LONG).show();
             }
         }
     }

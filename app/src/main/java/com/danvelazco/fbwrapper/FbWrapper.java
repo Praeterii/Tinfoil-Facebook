@@ -18,7 +18,6 @@ import android.widget.RelativeLayout;
 import com.danvelazco.fbwrapper.activity.BaseFacebookWebViewActivity;
 import com.danvelazco.fbwrapper.preferences.FacebookPreferences;
 import com.danvelazco.fbwrapper.util.Logger;
-import com.danvelazco.fbwrapper.util.OrbotHelper;
 
 /**
  * Facebook web wrapper activity.
@@ -241,12 +240,6 @@ public class FbWrapper extends BaseFacebookWebViewActivity {
                 e.printStackTrace();
             }
             setProxy(proxyHost, proxyPortInt);
-
-            // If Orbot is installed and not running, request to start it
-            OrbotHelper orbotHelper = new OrbotHelper(this);
-            if (orbotHelper.isOrbotInstalled() && !orbotHelper.isOrbotRunning()) {
-                orbotHelper.requestOrbotStart(this);
-            }
         }
 
         // Whether the site should be loaded as the mobile or desktop version
@@ -267,9 +260,6 @@ public class FbWrapper extends BaseFacebookWebViewActivity {
         } else if (mode.equalsIgnoreCase(FacebookPreferences.SITE_MODE_BASIC)) {
             // Force the webview to load the Basic HTML Mobile site
             setupFacebookWebViewConfig(true, true, true, false, false);
-        } else if (mode.equalsIgnoreCase(FacebookPreferences.SITE_MODE_ONION)) {
-            // Force the webview to load Facebook via Tor (onion network)
-            setupFacebookWebViewConfig(true, true, false, false, true);
         } else {
             // Do not force, allow us to auto-detect what mode to use
             setupFacebookWebViewConfig(false, true, false, false, false);

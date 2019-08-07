@@ -38,7 +38,6 @@ public class FacebookPreferences extends PreferenceActivity {
     public final static String MENU_DRAWER_SHOWED_OPENED = "drawer_shown_opened";
 
     // Shared preference keys
-    public final static String CAT_GENERAL = "pref_cat_general";
     public final static String ALLOW_CHECKINS = "prefs_allow_checkins";
     public final static String OPEN_LINKS_INSIDE = "prefs_open_links_inside";
     public final static String BLOCK_IMAGES = "prefs_block_images";
@@ -51,7 +50,6 @@ public class FacebookPreferences extends PreferenceActivity {
     public final static String SITE_MODE_DESKTOP = "desktop";
     public final static String SITE_MODE_BASIC = "basic";
     public final static String SITE_MODE_ZERO = "zero";
-    public final static String SITE_MODE_ONION = "onion";
     public final static String ABOUT = "pref_about";
 
     // Preferences
