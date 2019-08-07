@@ -16,7 +16,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        versionCode 2020000
+        versionCode 3
         versionName "2.0.0"
 
         minSdkVersion rootProject.ext.minSdkVersion
