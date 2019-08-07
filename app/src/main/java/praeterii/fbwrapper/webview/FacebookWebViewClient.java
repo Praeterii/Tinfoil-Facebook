@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.danvelazco.fbwrapper.webview;
+package praeterii.fbwrapper.webview;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -23,7 +23,7 @@ import android.view.KeyEvent;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import com.danvelazco.fbwrapper.util.Logger;
+import praeterii.fbwrapper.util.Logger;
 
 /**
  * FacebookWebViewClient.<br/>

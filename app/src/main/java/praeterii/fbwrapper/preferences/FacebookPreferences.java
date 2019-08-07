@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.danvelazco.fbwrapper.preferences;
+package praeterii.fbwrapper.preferences;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -25,7 +25,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
-import com.danvelazco.fbwrapper.R;
+import praeterii.fbwrapper.R;
 
 /**
  * Preferences activity

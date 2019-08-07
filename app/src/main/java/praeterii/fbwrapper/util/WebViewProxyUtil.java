@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.danvelazco.fbwrapper.util;
+package praeterii.fbwrapper.util;
 
 import android.content.Context;
 import android.content.Intent;

@@ -31,7 +31,7 @@
             android:layout_height="match_parent">
 
             <!-- Our actual WebView -->
-            <com.danvelazco.fbwrapper.webview.FacebookWebView
+            <praeterii.fbwrapper.webview.FacebookWebView
                 android:id="@+id/webview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

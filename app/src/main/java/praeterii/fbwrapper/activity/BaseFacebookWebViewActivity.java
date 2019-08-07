@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.danvelazco.fbwrapper.activity;
+package praeterii.fbwrapper.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -52,12 +52,12 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.danvelazco.fbwrapper.R;
-import com.danvelazco.fbwrapper.util.Logger;
-import com.danvelazco.fbwrapper.util.WebViewProxyUtil;
-import com.danvelazco.fbwrapper.webview.FacebookWebChromeClient;
-import com.danvelazco.fbwrapper.webview.FacebookWebView;
-import com.danvelazco.fbwrapper.webview.FacebookWebViewClient;
+import praeterii.fbwrapper.R;
+import praeterii.fbwrapper.util.Logger;
+import praeterii.fbwrapper.util.WebViewProxyUtil;
+import praeterii.fbwrapper.webview.FacebookWebChromeClient;
+import praeterii.fbwrapper.webview.FacebookWebView;
+import praeterii.fbwrapper.webview.FacebookWebViewClient;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -295,7 +295,7 @@ public abstract class BaseFacebookWebViewActivity extends Activity implements
     }
 
     /**
-     * Set a proxy for the {@link com.danvelazco.fbwrapper.webview.FacebookWebView}
+     * Set a proxy for the {@link praeterii.fbwrapper.webview.FacebookWebView}
      *
      * @param host {@link String}
      * @param port {@link int}

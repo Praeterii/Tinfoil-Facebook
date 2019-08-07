@@ -1,4 +1,4 @@
-package com.danvelazco.fbwrapper;
+package praeterii.fbwrapper;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -15,9 +15,9 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
-import com.danvelazco.fbwrapper.activity.BaseFacebookWebViewActivity;
-import com.danvelazco.fbwrapper.preferences.FacebookPreferences;
-import com.danvelazco.fbwrapper.util.Logger;
+import praeterii.fbwrapper.activity.BaseFacebookWebViewActivity;
+import praeterii.fbwrapper.preferences.FacebookPreferences;
+import praeterii.fbwrapper.util.Logger;
 
 /**
  * Facebook web wrapper activity.
@@ -210,7 +210,7 @@ public class FbWrapper extends BaseFacebookWebViewActivity {
     /**
      * Set the preferences for this activity by using the
      * {@link PreferenceManager} to load the Default shared preferences.<br />
-     * Most preferences will be automatically set for the {@link com.danvelazco.fbwrapper.webview.FacebookWebView}.
+     * Most preferences will be automatically set for the {@link praeterii.fbwrapper.webview.FacebookWebView}.
      */
     private void loadPreferences() {
 
@@ -278,7 +278,7 @@ public class FbWrapper extends BaseFacebookWebViewActivity {
     }
 
     /**
-     * Configure this {@link com.danvelazco.fbwrapper.webview.FacebookWebView}
+     * Configure this {@link praeterii.fbwrapper.webview.FacebookWebView}
      * with the appropriate preferences depending on the device configuration.<br />
      * Use the 'force' flag to force the configuration to either mobile or desktop.
      *

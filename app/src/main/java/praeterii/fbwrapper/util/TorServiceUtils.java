@@ -1,4 +1,4 @@
-package com.danvelazco.fbwrapper.util;
+package praeterii.fbwrapper.util;
 
 import android.util.Log;
 

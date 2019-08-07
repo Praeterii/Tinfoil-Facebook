@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.danvelazco.fbwrapper.util;
+package praeterii.fbwrapper.util;
 
 import android.util.Log;
-import com.danvelazco.fbwrapper.BuildConfig;
+import praeterii.fbwrapper.BuildConfig;
 
 /**
  * Logger wrapper class to handle {@link android.util.Log} depending on debug level.

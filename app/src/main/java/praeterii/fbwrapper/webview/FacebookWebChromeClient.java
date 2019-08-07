@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.danvelazco.fbwrapper.webview;
+package praeterii.fbwrapper.webview;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -28,8 +28,8 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
-import com.danvelazco.fbwrapper.R;
-import com.danvelazco.fbwrapper.util.Logger;
+import praeterii.fbwrapper.R;
+import praeterii.fbwrapper.util.Logger;
 
 /**
  * FacebookWebChromeClient.<br/> Extends {@link android.webkit.WebChromeClient}.<br/> Used by {@link FacebookWebView}.

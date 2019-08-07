@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.danvelazco.fbwrapper.webview;
+package praeterii.fbwrapper.webview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
