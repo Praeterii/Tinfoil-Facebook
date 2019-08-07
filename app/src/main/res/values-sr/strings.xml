@@ -17,7 +17,6 @@
 <resources>
 
     <!-- App name -->
-    <string name="app_name">Омот за Фејсбук</string>
     <string name="app_name_short">Тинфојл</string>
 
     <!-- Labels -->

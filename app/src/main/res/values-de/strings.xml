@@ -19,7 +19,6 @@
 <resources>
 
     <!-- App name -->
-    <string name="app_name">Tinfoil für Facebook</string>
     <string name="app_name_short">Tinfoil</string>
 
     <!-- Labels -->
