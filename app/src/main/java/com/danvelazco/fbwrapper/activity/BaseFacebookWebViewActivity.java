@@ -432,6 +432,8 @@ public abstract class BaseFacebookWebViewActivity extends Activity implements
      *         {@link String}
      */
     private void showLongPressedLinkMenu(ContextMenu menu, String url) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(browserIntent);
         // TODO: needs to be implemented, add ability to open site with external browser
     }
 

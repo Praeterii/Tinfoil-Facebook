@@ -28,26 +28,6 @@ public class Logger {
     private static int sLevel = BuildConfig.DEBUG ? Log.VERBOSE : Log.ERROR;
 
     /**
-     * Get current debug level of this application.
-     *
-     * @return {@link int}, for example {@link android.util.Log#DEBUG}.<br />
-     *         See {@link android.util.Log} for more
-     */
-    public static int getLevel() {
-        return sLevel;
-    }
-
-    /**
-     * Set the debug level of this application.
-     *
-     * @param level {@link int}, for example {@link android.util.Log#DEBUG}.<br />
-     *              See {@link android.util.Log} for more.
-     */
-    public static void setLevel(int level) {
-        sLevel = level;
-    }
-
-    /**
      * Send a {@link  android.util.Log#DEBUG} log message.
      *
      * @param tag {@link String} Used to identify the source of a log message.  It usually identifies
