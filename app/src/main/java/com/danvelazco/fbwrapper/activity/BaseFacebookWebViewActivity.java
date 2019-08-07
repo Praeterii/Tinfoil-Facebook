@@ -51,6 +51,7 @@ import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import com.danvelazco.fbwrapper.R;
 import com.danvelazco.fbwrapper.util.Logger;
 import com.danvelazco.fbwrapper.util.WebViewProxyUtil;
@@ -82,6 +83,7 @@ public abstract class BaseFacebookWebViewActivity extends Activity implements
     protected final static int RESULT_CODE_FILE_UPLOAD_LOLLIPOP = 2001;
     protected static final String KEY_SAVE_STATE_TIME = "_instance_save_state_time";
     private static final int ID_CONTEXT_MENU_SAVE_IMAGE = 2981279;
+    private static final int ID_CONTEXT_MENU_OPEN_URL = 2981280;
     protected final static String INIT_URL_MOBILE = "https://m.facebook.com";
     protected final static String INIT_URL_DESKTOP = "https://www.facebook.com";
     protected final static String INIT_URL_FACEBOOK_ZERO = "https://0.facebook.com";
@@ -116,6 +118,7 @@ public abstract class BaseFacebookWebViewActivity extends Activity implements
     protected ValueCallback<Uri[]> mUploadMessageLollipop = null;
     private boolean mCreatingActivity = true;
     private String mPendingImageUrlToSave = null;
+    private String cachedUrl;
 
     /**
      * BroadcastReceiver to handle ConnectivityManager.CONNECTIVITY_ACTION intent action.
@@ -285,6 +288,8 @@ public abstract class BaseFacebookWebViewActivity extends Activity implements
             case ID_CONTEXT_MENU_SAVE_IMAGE:
                 saveImageToDisk(mPendingImageUrlToSave);
                 break;
+            case ID_CONTEXT_MENU_OPEN_URL:
+                openExternalBrowser(cachedUrl);
         }
         return super.onContextItemSelected(item);
     }
@@ -426,29 +431,38 @@ public abstract class BaseFacebookWebViewActivity extends Activity implements
      * Show a context menu to allow the user to perform actions specifically related to the link they just long pressed
      * on.
      *
-     * @param menu
-     *         {@link ContextMenu}
-     * @param url
-     *         {@link String}
+     * @param menu {@link ContextMenu}
+     * @param url  {@link String}
      */
     private void showLongPressedLinkMenu(ContextMenu menu, String url) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        startActivity(browserIntent);
-        // TODO: needs to be implemented, add ability to open site with external browser
+        cachedUrl = url;
+        menu.add(0, ID_CONTEXT_MENU_OPEN_URL, 0, getString(R.string.lbl_open_external));
     }
 
     /**
      * Show a context menu to allow the user to perform actions specifically related to the image they just long pressed
      * on.
      *
-     * @param menu
-     *         {@link ContextMenu}
-     * @param imageUrl
-     *         {@link String}
+     * @param menu     {@link ContextMenu}
+     * @param imageUrl {@link String}
      */
     private void showLongPressedImageMenu(ContextMenu menu, String imageUrl) {
         mPendingImageUrlToSave = imageUrl;
-        menu.add(0, ID_CONTEXT_MENU_SAVE_IMAGE, 0, getString(R.string.lbl_save_image));
+        menu.add(1, ID_CONTEXT_MENU_SAVE_IMAGE, 0, getString(R.string.lbl_save_image));
+        showLongPressedLinkMenu(menu, imageUrl);
+    }
+
+    /**
+     * Tries to open external browser.
+     *
+     * @param url - url to be opened
+     */
+    private void openExternalBrowser(String url) {
+        try {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(browserIntent);
+        } catch (Exception ignored) {
+        }
     }
 
     /**
@@ -684,8 +698,7 @@ public abstract class BaseFacebookWebViewActivity extends Activity implements
     /**
      * Save the image on the specified URL to disk
      *
-     * @param imageUrl
-     *         {@link String}
+     * @param imageUrl {@link String}
      */
     private void saveImageToDisk(String imageUrl) {
         if (imageUrl != null) {

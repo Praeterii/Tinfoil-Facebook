@@ -28,6 +28,7 @@
     <string name="lbl_yes">Yes</string>
     <string name="lbl_no">No</string>
     <string name="lbl_save_image">Save image</string>
+    <string name="lbl_open_external">Open browser</string>
 
     <!-- Sharing -->
     <string name="share_action">Share current page</string>
