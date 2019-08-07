@@ -42,12 +42,6 @@ android {
             resValue "string", "app_name", "Tin Facebook"
         }
     }
-
-    lintOptions {
-        disable 'ExtraTranslation'
-        disable 'MissingTranslation'
-        abortOnError false
-    }
 }
 
 final SUPPORT_LIBRARY_VERSION = rootProject.ext.SUPPORT_LIBRARY_VERSION
