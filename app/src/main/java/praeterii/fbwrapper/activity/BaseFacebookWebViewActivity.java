@@ -335,14 +335,14 @@ public abstract class BaseFacebookWebViewActivity extends Activity implements
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 mWebSettings.setUserAgentString(USER_AGENT_MOBILE_OLD);
             } else {
-                mWebSettings.setUserAgentString(USER_AGENT_MOBILE);
+                mWebSettings.setUserAgentString(USER_AGENT_DESKTOP);
             }
         } else if (force && !mobile && !facebookBasic) {
             mWebSettings.setUserAgentString(USER_AGENT_DESKTOP);
         } else if (force && mobile && facebookBasic) {
             mWebSettings.setUserAgentString(USER_AGENT_BASIC);
         } else {
-            mWebSettings.setUserAgentString(null);
+            mWebSettings.setUserAgentString(USER_AGENT_DESKTOP);
         }
     }
 
