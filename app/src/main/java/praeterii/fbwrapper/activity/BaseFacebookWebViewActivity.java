@@ -16,7 +16,6 @@
 
 package praeterii.fbwrapper.activity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -26,18 +25,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.ContextMenu;
@@ -51,7 +45,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import praeterii.fbwrapper.R;
 import praeterii.fbwrapper.util.Logger;
@@ -59,8 +52,6 @@ import praeterii.fbwrapper.util.WebViewProxyUtil;
 import praeterii.fbwrapper.webview.FacebookWebChromeClient;
 import praeterii.fbwrapper.webview.FacebookWebView;
 import praeterii.fbwrapper.webview.FacebookWebViewClient;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 /**
  * Base activity that uses a {@link FacebookWebView} to load the Facebook
@@ -81,7 +72,6 @@ public abstract class BaseFacebookWebViewActivity extends Activity implements
     protected final static int RESULT_CODE_FILE_UPLOAD_LOLLIPOP = 2001;
     protected final static int RESULT_CODE_WRITE_PERMISSION_REQUEST = 2002;
     protected static final String KEY_SAVE_STATE_TIME = "_instance_save_state_time";
-    private static final int ID_CONTEXT_MENU_SAVE_IMAGE = 2981279;
     private static final int ID_CONTEXT_MENU_OPEN_URL = 2981280;
     protected final static String INIT_URL_MOBILE = "https://m.facebook.com";
     protected final static String INIT_URL_DESKTOP = "https://www.facebook.com";
@@ -286,9 +276,6 @@ public abstract class BaseFacebookWebViewActivity extends Activity implements
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case ID_CONTEXT_MENU_SAVE_IMAGE:
-                saveImageToDisk(mPendingImageUrlToSave);
-                break;
             case ID_CONTEXT_MENU_OPEN_URL:
                 openExternalBrowser(cachedUrl);
         }
@@ -449,7 +436,6 @@ public abstract class BaseFacebookWebViewActivity extends Activity implements
      */
     private void showLongPressedImageMenu(ContextMenu menu, String imageUrl) {
         mPendingImageUrlToSave = imageUrl;
-        menu.add(1, ID_CONTEXT_MENU_SAVE_IMAGE, 0, getString(R.string.lbl_save_image));
         showLongPressedLinkMenu(menu, imageUrl);
     }
 
@@ -695,59 +681,4 @@ public abstract class BaseFacebookWebViewActivity extends Activity implements
         }
         return super.onKeyDown(keyCode, event);
     }
-
-    /**
-     * Save the image on the specified URL to disk
-     *
-     * @param imageUrl {@link String}
-     */
-    private void saveImageToDisk(String imageUrl) {
-        if (imageUrl == null) {
-            return;
-        }
-        this.imageUrl = null;
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                Picasso.get().load(imageUrl).into(saveImageTarget);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RESULT_CODE_WRITE_PERMISSION_REQUEST);
-            this.imageUrl = imageUrl;
-        } else {
-            Toast.makeText(this, R.string.txt_save_image_failed, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (permissions.length == 0) {
-            return;
-        }
-        if (RESULT_CODE_WRITE_PERMISSION_REQUEST == requestCode) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                saveImageToDisk(this.imageUrl);
-            } else {
-                Toast.makeText(BaseFacebookWebViewActivity.this, getString(R.string.mission_permission),
-                        Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    private Target saveImageTarget = new Target() {
-        @Override
-        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
-            new SaveImageAsyncTask(getApplication()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
-        }
-
-        @Override
-        public void onBitmapFailed(Exception e, Drawable drawable) {
-            Toast.makeText(BaseFacebookWebViewActivity.this, getString(R.string.txt_save_image_failed),
-                    Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        public void onPrepareLoad(Drawable drawable) {
-            // Not implemented
-        }
-    };
-
 }
