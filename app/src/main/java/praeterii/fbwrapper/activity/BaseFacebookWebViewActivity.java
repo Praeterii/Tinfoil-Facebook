@@ -16,16 +16,17 @@
 
 package praeterii.fbwrapper.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Application;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -35,8 +36,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.ContextMenu;
@@ -61,9 +62,6 @@ import praeterii.fbwrapper.webview.FacebookWebViewClient;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import java.io.File;
-import java.io.FileOutputStream;
-
 /**
  * Base activity that uses a {@link FacebookWebView} to load the Facebook
  * site in different formats. Here we can implement all the boilerplate code
@@ -81,6 +79,7 @@ public abstract class BaseFacebookWebViewActivity extends Activity implements
     private final static String LOG_TAG = "BaseFacebookWebViewActivity";
     protected final static int RESULT_CODE_FILE_UPLOAD = 1001;
     protected final static int RESULT_CODE_FILE_UPLOAD_LOLLIPOP = 2001;
+    protected final static int RESULT_CODE_WRITE_PERMISSION_REQUEST = 2002;
     protected static final String KEY_SAVE_STATE_TIME = "_instance_save_state_time";
     private static final int ID_CONTEXT_MENU_SAVE_IMAGE = 2981279;
     private static final int ID_CONTEXT_MENU_OPEN_URL = 2981280;
@@ -119,6 +118,8 @@ public abstract class BaseFacebookWebViewActivity extends Activity implements
     private boolean mCreatingActivity = true;
     private String mPendingImageUrlToSave = null;
     private String cachedUrl;
+    private String imageUrl;
+
 
     /**
      * BroadcastReceiver to handle ConnectivityManager.CONNECTIVITY_ACTION intent action.
@@ -701,19 +702,44 @@ public abstract class BaseFacebookWebViewActivity extends Activity implements
      * @param imageUrl {@link String}
      */
     private void saveImageToDisk(String imageUrl) {
-        if (imageUrl != null) {
-            Picasso.with(this).load(imageUrl).into(saveImageTarget);
+        if (imageUrl == null) {
+            return;
+        }
+        this.imageUrl = null;
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                Picasso.get().load(imageUrl).into(saveImageTarget);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RESULT_CODE_WRITE_PERMISSION_REQUEST);
+            this.imageUrl = imageUrl;
+        } else {
+            Toast.makeText(this, R.string.txt_save_image_failed, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (permissions.length == 0) {
+            return;
+        }
+        if (RESULT_CODE_WRITE_PERMISSION_REQUEST == requestCode) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                saveImageToDisk(this.imageUrl);
+            } else {
+                Toast.makeText(BaseFacebookWebViewActivity.this, getString(R.string.mission_permission),
+                        Toast.LENGTH_LONG).show();
+            }
         }
     }
 
     private Target saveImageTarget = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
-            new SaveImageTask(getApplication()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
+            new SaveImageAsyncTask(getApplication()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
         }
 
         @Override
-        public void onBitmapFailed(Drawable drawable) {
+        public void onBitmapFailed(Exception e, Drawable drawable) {
             Toast.makeText(BaseFacebookWebViewActivity.this, getString(R.string.txt_save_image_failed),
                     Toast.LENGTH_LONG).show();
         }
@@ -723,44 +749,5 @@ public abstract class BaseFacebookWebViewActivity extends Activity implements
             // Not implemented
         }
     };
-
-    private static class SaveImageTask extends AsyncTask<Bitmap, Void, Boolean> {
-        private final Application application;
-
-        SaveImageTask(Application application) {
-            this.application = application;
-        }
-
-        @Override
-        protected Boolean doInBackground(Bitmap... images) {
-            Bitmap bitmap = images[0];
-            File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            File imageFile = new File(directory, System.currentTimeMillis() + ".jpg");
-            try {
-                if (imageFile.createNewFile()) {
-                    FileOutputStream ostream = new FileOutputStream(imageFile);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 75, ostream);
-                    ostream.close();
-
-                    // Ping the media scanner
-                    application.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(imageFile)));
-
-                    return true;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return false;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if (result) {
-                Toast.makeText(application, R.string.txt_save_image_success, Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(application, R.string.txt_save_image_failed, Toast.LENGTH_LONG).show();
-            }
-        }
-    }
 
 }

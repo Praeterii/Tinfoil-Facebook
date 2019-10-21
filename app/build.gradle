@@ -47,5 +47,5 @@ final SUPPORT_LIBRARY_VERSION = rootProject.ext.SUPPORT_LIBRARY_VERSION
 
 dependencies {
     compile "com.android.support:support-v4:${SUPPORT_LIBRARY_VERSION}"
-    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.squareup.picasso:picasso:2.71828'
 }
